@@ -5,7 +5,7 @@ function mandelbrot(;
         image_size:: Tuple{Int, Int} = (1080, 1920),
         center_point:: Tuple{Float64, Float64} = (0.0, -0.5),
         zoom:: Int = 1,
-        file_name:: String = "mandelbrot.png"
+        file_name:: Union{String, Nothing} = nothing,
     )
 
     aspect_ratio = image_size[2]/image_size[1]
@@ -23,9 +23,8 @@ function mandelbrot(;
 
     image = zeros(RGB{Float32}, image_size...)
     v = colorview(RGB, image)
-    C = CartesianIndices(image)
 
-    for i in C
+    for i in CartesianIndices(image)
         c = 0
         z = complex(y[1] + i[2]*scale[2], x[1] + i[1]*scale[1])
         z_curr = z
@@ -38,7 +37,7 @@ function mandelbrot(;
         end
     end
 
-    save(file_name, image)
+    !isnothing(file_name) && save(file_name, image)
 end
 
 mandelbrot()
